@@ -39,7 +39,7 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 Send yer cryptologically generated beer tokens to fuel further opensource software:  
 [coinbase, for convenience][coinbase], or the following bitcoin address: `13rZ67tmhi7M3nQ3w87uoNSHUUFmYx7f4V`
 
-[charlatan]: http://www.raindance.org/wp-content/uploads/charlatan.jpg
+[charlatan]: https://raw.githubusercontent.com/0x27/GitPass/master/img/charlatan.jpg
 [Fernet]: https://github.com/fernet/spec/
 [cryptography]: https://cryptography.io/en/latest/
 [coinbase]: https://www.coinbase.com/infodox/
