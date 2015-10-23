@@ -31,6 +31,7 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 * The following Python modules (which you can install via `pip install -r requirements.txt`
 
 [cryptography][cryptograhy-python]
+[github3][github3]
 
 ## Licence
 [Licenced under the WTFPL (do Whatever The Fuck you want Public Licence)][Licence]
@@ -43,5 +44,6 @@ Send yer cryptologically generated beer tokens to fuel further opensource softwa
 [bullshit]: https://raw.githubusercontent.com/0x27/GitPass/master/img/pure-bullshit.jpg
 [Fernet]: https://github.com/fernet/spec/
 [cryptography]: https://cryptography.io/en/latest/
+[github3]: https://github3py.readthedocs.org/en/master/
 [coinbase]: https://www.coinbase.com/infodox/
 [Licence]: http://www.wtfpl.net/txt/copying/
