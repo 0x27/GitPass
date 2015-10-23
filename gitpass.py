@@ -184,6 +184,31 @@ Simply reads in the password store, and lists them off like the following.
 ...
 Basically, makes it easy to list your usernames.
     """
+    return True
+
+def print_help():
+    """
+Sometimes users need help.
+    """
+
+def spawn_interactive_prompt(master_password, our_salt, gh, repo, branch):
+    """
+This is the interactive "shell".
+    """
+    print "Welcome to the GitPass Console. Type 'help' for help."
+    while True:
+        try:
+            command = raw_input("GitPass> ")
+        except KeyboardInterrupt:
+            sys.exit("{!} Caught Ctrl+C, lets bail!")
+        if command == "help":
+            print_help()
+        if command == "list":
+            list_passwords(password_store=password_store)
+        if command == "pull":
+            password_store = git_pull(gh, repo, branch)
+        if command == "commit":
+            git_push(gh, repo, branch, data=password_store)
 
 def main():
     if os.path.exists(os.getenv("HOME")+"/.gitpass.conf") != True:
@@ -195,6 +220,7 @@ def main():
     else:
         master_password = getpass.getpass("Password: ").strip()
         our_salt,gh,repo,branch = retrieve_config(master_password=master_password)
+    spawn_interactive_prompt(master_password=master_password, our_salt=our_salt, gh=gh, repo=repo, branch=branch)
 
 if __name__ == "__main__":
     main()
