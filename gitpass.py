@@ -29,7 +29,31 @@ First run configuration: accepts our master password, creates a salt, asks for a
     'github_repo': github_repo
 }
 It returns the our_salt,gh,repo,branch objects. branch is set to master, just fucking because why the hell not.
-   """
+    """
+    print "{+} Generating salt..."
+    our_salt = os.urandom(16) # salty
+    try:
+        github_username = raw_input("Please input your github username: ").strip()
+    except Exception, e:
+        return False,False,False
+    try:
+        github_password = raw_input("Please input your github password: ").strip() # we will change this to getpass.
+    except Exception, e:
+        return False,False,False
+    try:
+        github_repo = raw_input("Please input your github repository: ").strip()
+    except Exception, e:
+        return False,False,False
+    config_data = {'salt': our_salt,
+                'github_username': github_username,
+                'github_password': encrypt(master_password=master_password, our_salt=our_salt, data=github_password),
+                'github_repo': github_repo}
+    config_file = os.getenv("HOME")+"/.gitpass.conf"
+    with open(config_file, "w") as outfile:
+        json.dump(config_data, outfile)
+    print "{+} Configuration file written!"
+    print "{*} Logging into Github now..."
+    gh,repo,branch = git_connect(github_username=github_username, github_password=github_password, github_repo=github_repo)
     return our_salt,gh,repo,branch
 
 def retrieve_config(master_password):
