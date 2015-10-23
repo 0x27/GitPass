@@ -9,6 +9,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import github3
+import getpass
 
 def git_connect(github_username, github_password, github_repo):
     """
@@ -37,7 +38,7 @@ It returns the our_salt,gh,repo,branch objects. branch is set to master, just fu
     except Exception, e:
         return False,False,False
     try:
-        github_password = raw_input("Please input your github password: ").strip() # we will change this to getpass.
+        github_password = getpass.getpass("Please input your github password: ").strip() # we will change this to getpass.
     except Exception, e:
         return False,False,False
     try:
