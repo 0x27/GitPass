@@ -14,8 +14,10 @@ def git_connect(github_username, github_password, github_repo):
     """
 Logs in to github with our creds, returns gh,repo,branch objects.
     """
-    return gh,repo,branch
-
+    gh = login(username=github_username, password=github_password) # we login and get a session.
+    repo = gh.repository(github_username,github_repo) # we create our repo object
+    branch = repo.branch("master") # hardcode this right fucking now
+    return gh,repo,branch # return our objects...
 
 def first_run_config(master_password):
     """
