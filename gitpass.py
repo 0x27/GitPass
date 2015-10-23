@@ -156,24 +156,46 @@ def insert_password(master_password, our_salt, username, password, webshite, pas
     """
 Inserts a set of credentials into the password store.
     """
+    encrypted_site = encrypt(master_password=master_password, our_salt=our_salt, data=webshite)
+    encrypted_username = encrypt(master_password=master_password, our_salt=our_salt, data=username)
+    encrypted_password = encrypt(master_password=master_password, our_salt=our_salt, data=password)
+    new_record = {"site": encrypted_site, "username": encrypted_username, "password": encrypted_password, "datetime": datetime.datetime.now()}
+    print password_store['creds'].append(new_record)
+    print "{*} Inserted!"
     return password_store
 
 def retrieve_password(master_password, our_salt, index, password_store):
     """
 Retrieves a password from the password store. Passwords are indexed with a numbering system.
     """
-    return password
+    credentials = password_store['creds'][int(index)]
+    # we stick in our validity check here with the datetime... later.
+    username = decrypt(master_password=master_password, our_salt=our_salt, data=credentials['username'])
+    password = decrypt(master_password=master_password, our_salt=our_salt, data=credentials['password'])
+    webshite = decrypt(master_password=master_password, our_salt=our_salt, data=credentials['site'])
+    return username,password,webshite
 
 def update_password(master_password, our_salt, index, password_store, password):
     """
 Updates a password record in the data store (by adding a new record to it and sorting it, so we have history!)
     """
+   
+    credentials = password_store['creds'][int(index)]
+    encrypted_password = encrypt(master_password=master_password, our_salt=our_salt, data=password)
+    credentials['password'] = encrypted_password
+    password_store['creds'].remove(int(index)) # we actually remove it and replace it
+    password_store['creds'].append(credentials) # here we are popping it back on
+    print "{*} Updated!"
+    print "{!} You may want to run 'list' again buddy..."
     return password_store
 
 def delete_password(master_password, our_salt, index, password_store):
     """
 Deletes a record from our password store (LOL, NOT REALLY, ITS STORED ON GITHUB ANYWAY)
     """
+    password_store['creds'].remove(int(index))
+    print "{*} Deleted!"
+    print "{!} You may want to run 'list' again buddy..."
     return password_store
 
 def list_passwords(password_store):
@@ -190,12 +212,24 @@ def print_help():
     """
 Sometimes users need help.
     """
+    print """\
+GitPass Help Menu.
+help - this help menu.
+list - list passwords in the store.
+insert - insert a password to the store.
+retrieve - retrieve a password from the store.
+update - update a password in the store.
+delete - delete a password from the store.
+pull - get the latest version of password store from git.
+commit - commit changes to the store to the git.
+    """
 
 def spawn_interactive_prompt(master_password, our_salt, gh, repo, branch):
     """
 This is the interactive "shell".
     """
     print "Welcome to the GitPass Console. Type 'help' for help."
+    password_store = git_pull(gh, repo, branch)
     while True:
         try:
             command = raw_input("GitPass> ")
@@ -205,6 +239,27 @@ This is the interactive "shell".
             print_help()
         if command == "list":
             list_passwords(password_store=password_store)
+        if command == "insert":
+            # do insert, return password_store
+            webshite = raw_input("Webshite: ").strip()
+            username = raw_input("Your Username: ").strip()
+            password = getpass.getpass("Your Password: ").strip()
+            password_store = insert_password(master_password=master_password, our_salt=our_salt, username=username, password=password, webshite=webshite, password_store=password_store)
+        if command == "retrieve":
+            index = raw_input("Index of password you want to retrieve: ")
+            username,password,webshite = retrieve_password(master_password=master_password, our_salt=our_salt, index=index, password_store=password_store)
+            print "{>} Website: %s" %(webshite)
+            print "{>} Username: %s" %(username)
+            print "{>} Password: %s" %(password)
+        if command == "update":
+			# do update, return password store
+            index = raw_input("Index number of password you wish to update: ").strip()
+            password = raw_input("New Password: ").strip()
+            password_store = update_password(master_password=master_password, our_salt=our_salt, index=index, password_store=password_store, password=password)
+        if command == "delete":
+            # do delete, return password store
+            index = raw_input("Index number of password you wish to delete: ").strip()
+            password_store = delete_password(master_password=master_password, our_salt=our_salt, index=index, password_store=password_store)
         if command == "pull":
             password_store = git_pull(gh, repo, branch)
         if command == "commit":
