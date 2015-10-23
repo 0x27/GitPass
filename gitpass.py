@@ -1,9 +1,11 @@
 #!/usr/bin/python2
 # coding: utf-8
 import json
+import ast
 import base64
 import binascii
 import os
+import sys
 from cryptography.fernet import Fernet
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
@@ -82,6 +84,7 @@ def git_pull(gh, repo, branch):
     """
 Pulls our data from the github repo. Only looks for files named "gitpass" in "master". Returns data if success, or fails and some other fucking shit handles the error.
     """
+    data = base64.b64decode(repo.contents(path="gitpass").content)
     return data
 
 def encrypt(master_password, our_salt, data):
@@ -160,7 +163,7 @@ Inserts a set of credentials into the password store.
     encrypted_username = encrypt(master_password=master_password, our_salt=our_salt, data=username)
     encrypted_password = encrypt(master_password=master_password, our_salt=our_salt, data=password)
     new_record = {"site": encrypted_site, "username": encrypted_username, "password": encrypted_password, "datetime": datetime.datetime.now()}
-    print password_store['creds'].append(new_record)
+    password_store['creds'].append(new_record)
     print "{*} Inserted!"
     return password_store
 
@@ -198,7 +201,7 @@ Deletes a record from our password store (LOL, NOT REALLY, ITS STORED ON GITHUB 
     print "{!} You may want to run 'list' again buddy..."
     return password_store
 
-def list_passwords(password_store):
+def list_passwords(master_password, our_salt, password_store):
     """
 Simply reads in the password store, and lists them off like the following.
 [0] user: rick@astley.com site: https://facebook.com
@@ -206,6 +209,12 @@ Simply reads in the password store, and lists them off like the following.
 ...
 Basically, makes it easy to list your usernames.
     """
+    records = password_store['creds']
+    for record in records:
+        index = records.index(record)
+        username_decrypted = decrypt(master_password=master_password, our_salt=our_salt, data=record['username'])
+        webshite_decrypted = decrypt(master_password=master_password, our_salt=our_salt, data=record['site'])
+        print "[%s] user: %s site: %s" %(index, username_decrypted, webshite_decrypted)
     return True
 
 def print_help():
@@ -229,7 +238,7 @@ def spawn_interactive_prompt(master_password, our_salt, gh, repo, branch):
 This is the interactive "shell".
     """
     print "Welcome to the GitPass Console. Type 'help' for help."
-    password_store = git_pull(gh, repo, branch)
+    password_store = ast.literal_eval(git_pull(gh, repo, branch)) # this is definately unsafe.
     while True:
         try:
             command = raw_input("GitPass> ")
@@ -238,7 +247,7 @@ This is the interactive "shell".
         if command == "help":
             print_help()
         if command == "list":
-            list_passwords(password_store=password_store)
+            list_passwords(master_password=master_password, our_salt=our_salt, password_store=password_store)
         if command == "insert":
             # do insert, return password_store
             webshite = raw_input("Webshite: ").strip()
