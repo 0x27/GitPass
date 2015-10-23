@@ -1,10 +1,10 @@
 # GitPass - Open Source Your Password (Mismanagement)!
 
 ## What?
-GitPass is an Open Source Password Mismanager, using Military Strength AES Cryptography and High Availability Cloud Hosting Services 
+GitPass is an Open Source Password Mismanager, using [Military Strength][charlatan] [Fernet][Fernet] Cryptography and High Availability Cloud Hosting Services 
 
 ## Features
-* MILITARY STRENGTH AES Cryptography!
+* [MILITARY STRENGTH][charlatan] [Fernet][Fernet] Cryptography!
 * Password history!
 * Command Line Interface!
 * High Availabilty Cloud Hosting Service for Password Storage!
@@ -30,7 +30,7 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 * Half a brain cell
 * The following Python modules (which you can install via `pip install -r requirements.txt`
 
-### python modules go here
+[cryptography][cryptograhy-python]
 
 ## Licence
 [Licenced under the WTFPL (do Whatever The Fuck you want Public Licence)][Licence]
@@ -39,5 +39,8 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 Send yer cryptologically generated beer tokens to fuel further opensource software:  
 [coinbase, for convenience][coinbase], or the following bitcoin address: `13rZ67tmhi7M3nQ3w87uoNSHUUFmYx7f4V`
 
+[charlatan]: http://www.raindance.org/wp-content/uploads/charlatan.jpg
+[Fernet]: https://github.com/fernet/spec/
+[cryptography]: https://cryptography.io/en/latest/
 [coinbase]: https://www.coinbase.com/infodox/
 [Licence]: http://www.wtfpl.net/txt/copying/
