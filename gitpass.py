@@ -54,12 +54,32 @@ def encrypt(master_password, our_salt, data):
     """
 Encrypts data with our salt and master password for extreme levels of security!!!
     """
-    return encrypted_data
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=our_salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(master_password))
+    f = Fernet(key)
+    encrypted_data = f.encrypt(b"%s"%(data))
+    return encrypted_data # its encoded in some way already.
 
 def decrypt(master_password, our_salt, data):
     """
 Decrypts data with our salt and master password for extreme levels of security!!!
     """
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=our_salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(master_password))
+    f = Fernet(key)
+    decrypted_data = f.decrypt(data)
     return decrypted_data
 
 def insert_password(master_password, our_salt, username, password, webshite, password_store): 
