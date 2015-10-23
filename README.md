@@ -36,7 +36,8 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 [Licenced under the WTFPL (do Whatever The Fuck you want Public Licence)][Licence]
 
 ## Beer?
-Send yer cryptologically generated beer tokens to fuel further opensource software: [coinbase, for convenience][coinbase], or the following bitcoin address: `13rZ67tmhi7M3nQ3w87uoNSHUUFmYx7f4V`
+Send yer cryptologically generated beer tokens to fuel further opensource software:  
+[coinbase, for convenience][coinbase], or the following bitcoin address: `13rZ67tmhi7M3nQ3w87uoNSHUUFmYx7f4V`
 
 [coinbase]: https://www.coinbase.com/infodox/
 [Licence]: http://www.wtfpl.net/txt/copying/
