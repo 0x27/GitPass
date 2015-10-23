@@ -30,7 +30,7 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 * Half a brain cell
 * The following Python modules (which you can install via `pip install -r requirements.txt`
 
-[cryptography][cryptograhy-python]
+[cryptography][cryptography]
 [github3][github3]
 
 ## Licence
