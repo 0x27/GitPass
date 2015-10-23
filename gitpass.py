@@ -61,6 +61,13 @@ def retrieve_config(master_password):
     """
 Reads in the config file stored in ~/.gitpass.conf, decrypts the github password, and returns the our_salt,gh,repo,branch objects for use.
     """
+    config_file = os.getenv("HOME")+"/.gitpass.conf"
+    configuration = json.loads(open(config_file, "rb").read())
+    our_salt = configuration['salt']
+    github_username = configuration['github_username']
+    github_password = decrypt(master_password=master_password, our_salt=our_salt, data=configuration['github_password'])
+    github_repo = configuration['github_repo']
+    gh,repo,branch = git_connect(github_username=github_username, github_password=github_password, github_repo=github_repo)
     return our_salt,gh,repo,branch
 
 def git_push(gh, repo, branch, data):
