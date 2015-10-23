@@ -2,6 +2,7 @@
 # coding: utf-8
 import json
 import base64
+import binascii
 import os
 from cryptography.fernet import Fernet
 from cryptography.fernet import Fernet
@@ -10,12 +11,13 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import github3
 import getpass
+import datetime
 
 def git_connect(github_username, github_password, github_repo):
     """
 Logs in to github with our creds, returns gh,repo,branch objects.
     """
-    gh = login(username=github_username, password=github_password) # we login and get a session.
+    gh = github3.login(username=github_username, password=github_password) # we login and get a session.
     repo = gh.repository(github_username,github_repo) # we create our repo object
     branch = repo.branch("master") # hardcode this right fucking now
     return gh,repo,branch # return our objects...
@@ -45,7 +47,7 @@ It returns the our_salt,gh,repo,branch objects. branch is set to master, just fu
         github_repo = raw_input("Please input your github repository: ").strip()
     except Exception, e:
         return False,False,False
-    config_data = {'salt': our_salt,
+    config_data = {'salt': our_salt.encode('base64'),
                 'github_username': github_username,
                 'github_password': encrypt(master_password=master_password, our_salt=our_salt, data=github_password),
                 'github_repo': github_repo}
@@ -63,7 +65,7 @@ Reads in the config file stored in ~/.gitpass.conf, decrypts the github password
     """
     config_file = os.getenv("HOME")+"/.gitpass.conf"
     configuration = json.loads(open(config_file, "rb").read())
-    our_salt = configuration['salt']
+    our_salt = configuration['salt'].decode('base64')
     github_username = configuration['github_username']
     github_password = decrypt(master_password=master_password, our_salt=our_salt, data=configuration['github_password'])
     github_repo = configuration['github_repo']
@@ -111,8 +113,44 @@ Decrypts data with our salt and master password for extreme levels of security!!
     )
     key = base64.urlsafe_b64encode(kdf.derive(master_password))
     f = Fernet(key)
-    decrypted_data = f.decrypt(data)
+    data_enc = binascii.unhexlify(data.encode('hex')) # filthy hack
+    decrypted_data = f.decrypt(data_enc)
     return decrypted_data
+
+# keystore handler shit
+"""
+# this is the 'raw', unencrypted, keystore. Passwords are decrypted on access:
+{
+    "creds":[
+             {
+             "site": "https://www.facebook.com",
+             "username": "nevergonnagive",
+             "password": "youup",
+             "datetime": "2015-10-23 21:58:22.375668"
+             },
+             {
+             "site": "https://www.twitter.com",
+             "username": "nevergonnalet",
+             "password": "youdown",
+             "datetime": "2015-10-23 21:58:22.375668"
+             },
+             {
+             "site": "https://www.reddit.com",
+             "username": "nevergonnarun",
+             "password": "around",
+             "datetime": "2015-10-23 21:58:22.375668"
+             },
+             {
+             "site": "https://www.myspace.com",
+             "username": "anddesert",
+             "password": "you",
+             "datetime": "2015-10-23 21:58:22.375668"
+             }
+            ]
+}
+# the 'password' values are encrypted before writing to git.
+# datetime.datetime.now() is used to get the date of storing/updating.
+"""
 
 def insert_password(master_password, our_salt, username, password, webshite, password_store): 
     """
@@ -137,5 +175,28 @@ def delete_password(master_password, our_salt, index, password_store):
 Deletes a record from our password store (LOL, NOT REALLY, ITS STORED ON GITHUB ANYWAY)
     """
     return password_store
+
+def list_passwords(password_store):
+    """
+Simply reads in the password store, and lists them off like the following.
+[0] user: rick@astley.com site: https://facebook.com
+[1] user: rick@astley.com site: https://twitter.com
+...
+Basically, makes it easy to list your usernames.
+    """
+
+def main():
+    if os.path.exists(os.getenv("HOME")+"/.gitpass.conf") != True:
+        master_password = getpass.getpass("Please enter a master password. You will need to remember this! > ").strip()
+        if getpass.getpass("Please re-enter your master password to verify > ").strip() != master_password:
+            sys.exit("Eh. Try again.")
+        else:
+            our_salt,gh,repo,branch = first_run_config(master_password=master_password)
+    else:
+        master_password = getpass.getpass("Password: ").strip()
+        our_salt,gh,repo,branch = retrieve_config(master_password=master_password)
+
+if __name__ == "__main__":
+    main()
 
 # holy fuck, am I seriously building this?
