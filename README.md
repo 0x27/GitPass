@@ -33,6 +33,13 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 [cryptography][cryptography]  
 [github3][github3]
 
+## Screenshots
+### Initialization and help menu
+![initandhelp](https://raw.githubusercontent.com/0x27/GitPass/master/screenshots/inithelp.png)
+
+### Demo of List/Insert/Retrieve/Update functions
+![demolistetc](https://raw.githubusercontent.com/0x27/GitPass/master/screenshots/listinsertretrieveupdate.png)
+
 ## Licence
 [Licenced under the WTFPL (do Whatever The Fuck you want Public Licence)][Licence]
 
