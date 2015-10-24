@@ -7,3 +7,4 @@
 * Probably another code review/cleanup.
 * More/Better documentation.
 * Python3 Support "sometime, maybe".
+* Migrate from Github-Only Repository Support to a more general "Git" system so other services (Bitbucket, Self Hosted, Etc) can be used.
