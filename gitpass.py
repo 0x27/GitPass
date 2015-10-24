@@ -59,6 +59,8 @@ It returns the our_salt,gh,repo,branch objects. branch is set to master, just fu
     print "{+} Configuration file written!"
     print "{*} Logging into Github now..."
     gh,repo,branch = git_connect(github_username=github_username, github_password=github_password, github_repo=github_repo)
+    print "{*} Creating blank password store..."
+    commit = repo.create_file("gitpass","initiate",base64.b64encode('{"creds":[]}'))# hack
     return our_salt,gh,repo,branch
 
 def retrieve_config(master_password):
@@ -78,14 +80,18 @@ def git_push(gh, repo, branch, data):
     """
 Pushes our data to the github repo. Stores it in a file named "gitpass", obviously. Returns True if success, or False if failure.
     """
-    return True
+    try:
+        commit = repo.contents(path="gitpass").update(message="lol", content=base64.b64encode(str(data)))
+    except Exception, e:
+        print e
+        print "{!!} Oh no! Something wen't wrong! Try again later!"
 
 def git_pull(gh, repo, branch):
     """
 Pulls our data from the github repo. Only looks for files named "gitpass" in "master". Returns data if success, or fails and some other fucking shit handles the error.
     """
-    data = base64.b64decode(repo.contents(path="gitpass").content)
-    return data
+    data = base64.b64decode(base64.b64decode(repo.contents(path="gitpass").content)) # kludge for another bug
+    return data.strip()
 
 def encrypt(master_password, our_salt, data):
     """
@@ -162,7 +168,7 @@ Inserts a set of credentials into the password store.
     encrypted_site = encrypt(master_password=master_password, our_salt=our_salt, data=webshite)
     encrypted_username = encrypt(master_password=master_password, our_salt=our_salt, data=username)
     encrypted_password = encrypt(master_password=master_password, our_salt=our_salt, data=password)
-    new_record = {"site": encrypted_site, "username": encrypted_username, "password": encrypted_password, "datetime": datetime.datetime.now()}
+    new_record = {"site": encrypted_site, "username": encrypted_username, "password": encrypted_password, "datetime": '%s'%(datetime.datetime.now())}
     password_store['creds'].append(new_record)
     print "{*} Inserted!"
     return password_store
@@ -186,7 +192,7 @@ Updates a password record in the data store (by adding a new record to it and so
     credentials = password_store['creds'][int(index)]
     encrypted_password = encrypt(master_password=master_password, our_salt=our_salt, data=password)
     credentials['password'] = encrypted_password
-    password_store['creds'].remove(int(index)) # we actually remove it and replace it
+    password_store['creds'].pop(int(index)) # we actually remove it and replace it
     password_store['creds'].append(credentials) # here we are popping it back on
     print "{*} Updated!"
     print "{!} You may want to run 'list' again buddy..."
@@ -196,7 +202,7 @@ def delete_password(master_password, our_salt, index, password_store):
     """
 Deletes a record from our password store (LOL, NOT REALLY, ITS STORED ON GITHUB ANYWAY)
     """
-    password_store['creds'].remove(int(index))
+    password_store['creds'].pop(int(index))
     print "{*} Deleted!"
     print "{!} You may want to run 'list' again buddy..."
     return password_store
@@ -270,7 +276,7 @@ This is the interactive "shell".
             index = raw_input("Index number of password you wish to delete: ").strip()
             password_store = delete_password(master_password=master_password, our_salt=our_salt, index=index, password_store=password_store)
         if command == "pull":
-            password_store = git_pull(gh, repo, branch)
+            password_store = ast.literal_eval(git_pull(gh, repo, branch)) # this is definately unsafe.
         if command == "commit":
             git_push(gh, repo, branch, data=password_store)
 
