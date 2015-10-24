@@ -40,6 +40,9 @@ To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete"
 ### Demo of List/Insert/Retrieve/Update functions
 ![demolistetc](https://raw.githubusercontent.com/0x27/GitPass/master/screenshots/listinsertretrieveupdate.png)
 
+## Cryptography
+This project uses the [Fernet][Fernet] encryption standard as implemented in the [cryptography.io][cryptography] library. [Fernet][Fernet] is a [symmetric encryption][symmetric encryption] algorithm using [AES][AES] in [CBC][CBC] mode with a 128 bit key for encryption, using [PKCS7][PKCS7] for padding. For more information about [Fernet][Fernet], consult the [Fernet Spec Document][FernetSpec]. We have avoided the use of home-rolled crypto here, and went with a believed-to-be-safe set of primitives using a supposedly-safe encryption library. Audits are much appreciated.
+
 ## Licence
 [Licenced under the WTFPL (do Whatever The Fuck you want Public Licence)][Licence]
 
@@ -57,3 +60,8 @@ Those who cannot recognise parody when they see it are doomed to a miserable exi
 [github3]: https://github3py.readthedocs.org/en/master/
 [coinbase]: https://www.coinbase.com/infodox/
 [Licence]: http://www.wtfpl.net/txt/copying/
+[symmetric encryption]: https://en.wikipedia.org/wiki/Symmetric-key_algorithm
+[AES]: https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+[CBC]: https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_Block_Chaining_.28CBC.29
+[PKCS7]: https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7
+[FernetSpec]: https://github.com/fernet/spec/blob/master/Spec.md
