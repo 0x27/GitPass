@@ -25,6 +25,8 @@ You then can start adding passwords to the program. These are stored in an encry
 
 To retrieve passwords, you can "list", "retrieve", "add", "update", and "delete". You simply select the account you want to Mismanage, and manage away! It even notifies you on initialization if one of your passwords has not been changed in a while, and encourages you to update it!
 
+It is advisable that you use a private repository for your keystore, however, it is mathematically improbable that, provided you choose good master password, the keystore can be cracked. Still, better safe than pwned!
+
 ## Requirements
 * A computer with Python installed (only tested on GNU/Linux).
 * Half a brain cell
@@ -50,6 +52,9 @@ This project uses the [Fernet][Fernet] encryption standard as implemented in the
 Send yer cryptologically generated beer tokens to fuel further opensource software:  
 [coinbase, for convenience][coinbase], or the following bitcoin address: `13rZ67tmhi7M3nQ3w87uoNSHUUFmYx7f4V`
 
+## Bug Reports and Feature Requests
+Please submit all bug reports and feature requests to the [Github Issue Tracker][tracker]
+
 ## Footnote
 Those who cannot recognise parody when they see it are doomed to a miserable existance.
 
@@ -65,3 +70,4 @@ Those who cannot recognise parody when they see it are doomed to a miserable exi
 [CBC]: https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_Block_Chaining_.28CBC.29
 [PKCS7]: https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7
 [FernetSpec]: https://github.com/fernet/spec/blob/master/Spec.md
+[tracker]: https://github.com/0x27/GitPass/issues
