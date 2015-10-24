@@ -272,7 +272,7 @@ This is the interactive "shell".
         if command == "update":
 			# do update, return password store
             index = raw_input("Index number of password you wish to update: ").strip()
-            password = raw_input("New Password: ").strip()
+            password = getpass.getpass("New Password: ").strip()
             password_store = update_password(master_password=master_password, our_salt=our_salt, index=index, password_store=password_store, password=password)
         if command == "delete":
             # do delete, return password store
