@@ -239,7 +239,7 @@ update - update a password in the store.
 delete - delete a password from the store.
 pull - get the latest version of password store from git.
 commit - commit changes to the store to the git.
-quit - quits. I should probably have added this earlier.
+quit/exit - quits. I should probably have added this earlier.
     """
 
 def spawn_interactive_prompt(master_password, our_salt, gh, repo, branch):
@@ -282,7 +282,7 @@ This is the interactive "shell".
             password_store = ast.literal_eval(git_pull(gh, repo, branch)) # this is definately unsafe.
         if command == "commit":
             git_push(gh, repo, branch, data=password_store)
-        if command == "quit":
+        if command == "quit" or "exit":
             sys.exit("Bye!")
 
 def main():
