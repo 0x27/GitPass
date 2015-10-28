@@ -286,11 +286,11 @@ This is the interactive "shell".
             password_store = ast.literal_eval(git_pull(gh, repo, branch)) # this is definately unsafe.
         if command == "commit":
             git_push(gh, repo, branch, data=password_store)
-        if command == "quit" or command == "exit":
+        if command in ["quit", "exit"]:
             sys.exit("Bye!")
 
 def main():
-    if os.path.exists(get_config()) != True:
+    if not os.path.exists(get_config()):
         master_password = getpass.getpass("Please enter a master password. You will need to remember this! > ").strip()
         if getpass.getpass("Please re-enter your master password to verify > ").strip() != master_password:
             sys.exit("Eh. Try again.")
