@@ -10,7 +10,7 @@ GitPass is an Open Source Password Mismanager, using [Military Strength][charlat
 * [High Availabilty Cloud Hosting Service][bullshit] for Password Storage!
 * Notifies you when you should change your passwords! (Coming Soon!)
 * Free and Open Source Software!
-* Written in Python! Batteries are DEFINATELY included!
+* Written in Python! Batteries are DEFINITELY included!
 * Unnecessary Amounts of Hyperbole!
 
 ## How does it work?
