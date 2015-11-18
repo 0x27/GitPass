@@ -31,9 +31,8 @@ It is advisable that you use a private repository for your keystore, however, it
 * A computer with Python installed (only tested on GNU/Linux).
 * Half a brain cell
 * The following Python modules (which you can install via `pip install -r requirements.txt`
-
-[cryptography][cryptography]  
-[github3][github3]
+  * [cryptography][cryptography]  
+  * [github3][github3]
 
 ## Screenshots
 ### Initialization and help menu
