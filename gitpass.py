@@ -15,6 +15,10 @@ import github3
 import getpass
 import datetime
 
+def get_config():
+    config = os.path.expanduser("~/.gitpass.conf")
+    return config
+
 def git_connect(github_username, github_password, github_repo):
     """
 Logs in to github with our creds, returns gh,repo,branch objects.
@@ -53,7 +57,7 @@ It returns the our_salt,gh,repo,branch objects. branch is set to master, just fu
                 'github_username': github_username,
                 'github_password': encrypt(master_password=master_password, our_salt=our_salt, data=github_password),
                 'github_repo': github_repo}
-    config_file = os.getenv("HOME")+"/.gitpass.conf" # I have no idea if this works on Windows. Works on Linux just fine.
+    config_file = get_config()
     with open(config_file, "w") as outfile:
         json.dump(config_data, outfile) # theres gotta be a nicer way of doing this
     print "{+} Configuration file written!"
@@ -67,7 +71,7 @@ def retrieve_config(master_password):
     """
 Reads in the config file stored in ~/.gitpass.conf, decrypts the github password, and returns the our_salt,gh,repo,branch objects for use.
     """
-    config_file = os.getenv("HOME")+"/.gitpass.conf" # works on linux, fucked if I know about windows
+    config_file = get_config()
     configuration = json.loads(open(config_file, "rb").read()) # this works fine, but is sub optimal.
     our_salt = configuration['salt'].decode('base64') # yeah, we had to encode the salt...
     github_username = configuration['github_username'] # should we encrypt this for the craic? maybe
@@ -282,11 +286,11 @@ This is the interactive "shell".
             password_store = ast.literal_eval(git_pull(gh, repo, branch)) # this is definately unsafe.
         if command == "commit":
             git_push(gh, repo, branch, data=password_store)
-        if command == "quit" or "exit":
+        if command in ["quit", "exit"]:
             sys.exit("Bye!")
 
 def main():
-    if os.path.exists(os.getenv("HOME")+"/.gitpass.conf") != True:
+    if not os.path.exists(get_config()):
         master_password = getpass.getpass("Please enter a master password. You will need to remember this! > ").strip()
         if getpass.getpass("Please re-enter your master password to verify > ").strip() != master_password:
             sys.exit("Eh. Try again.")
