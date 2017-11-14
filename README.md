@@ -32,7 +32,7 @@ It is advisable that you use a private repository for your keystore, however, it
 * Half a brain cell
 * The following Python modules (which you can install via `pip install -r requirements.txt`
   * [cryptography][cryptography]  
-  * [github3][github3]
+  * [github3.py][github3] - note, for pip, this is named `github3.py`.
 
 ## Screenshots
 ### Initialization and help menu
